@@ -48,7 +48,7 @@ public class InMemoryUserRepository implements UserRepository {
 
         if (userForUpdate == null) {
             log.warn("Update error: User with id {} not found", userId);
-            throw new DataIntegrityException("User with id = '" + userId +"' should exist");
+            throw new DataIntegrityException("User with id = '" + userId + "' should exist");
         }
 
         User updatedUser = userForUpdate.toBuilder()
