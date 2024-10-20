@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.user.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,11 +8,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Item {
+public class User {
     Long id;
     String name;
-    String description;
-    Boolean available;
-    Long owner;
-    Long request;
+    String email;
 }
