@@ -15,13 +15,10 @@ public class InMemoryItemRepository implements ItemRepository {
 
     @Override
     public Item addItemToUser(long userId, Item item) {
-        log.info("Adding item for user with ID {}", userId);
-
         item.setId(generatePrimaryKey());
         item.setOwner(userId);
 
         userItemsMap.computeIfAbsent(userId, k -> new ArrayList<>()).add(item);
-        log.debug("Item added: {}", item);
 
         return item;
     }
