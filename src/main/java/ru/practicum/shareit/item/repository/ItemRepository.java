@@ -1,20 +1,31 @@
 package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.item.model.Item;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import ru.practicum.shareit.item.entity.Item;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public interface ItemRepository {
-    Item addItemToUser(long userId, Item item);
+public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    boolean isItemOfUserExist(long itemId, long userId);
+    Optional<Item> findByIdAndOwnerId(long itemId, long ownerId);
 
-    Item updateUserItem(long userId, long itemId, Item itemUpdate);
+    Collection<Item> findAllByOwnerId(long userId);
 
-    Optional<Item> findUserItemByItemId(long userId, long itemId);
+    @Query("""
+        SELECT it
+        FROM Item it
+        WHERE (lower(it.description) LIKE lower(CONCAT('%', :searchText, '%'))
+        OR lower(it.name) LIKE lower(CONCAT('%', :searchText, '%')) )
+        """)
+    Collection<Item> findBySearchText(@Param("searchText") String searchText);
 
-    Collection<Item> findUserItems(long userId);
-
-    Collection<Item> findUserItemBySearchText(long userId, String searchText);
+    @Query("""
+        SELECT i FROM Item i
+        LEFT JOIN FETCH i.comments c
+        WHERE i.owner.id = :ownerId
+    """)
+    Collection<Item> findAllByOwnerIdWithComments(@Param("ownerId") long ownerId);
 }
