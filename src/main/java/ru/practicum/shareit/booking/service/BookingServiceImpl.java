@@ -47,7 +47,7 @@ public class BookingServiceImpl implements BookingService {
 
         long itemId = bookingPostDto.getItemId();
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(()-> new ItemNotFoundException(itemId));
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
 
         User booker = userRepository.findById(bookerId)
                 .orElseThrow(() -> new UserNotFoundException(bookerId));

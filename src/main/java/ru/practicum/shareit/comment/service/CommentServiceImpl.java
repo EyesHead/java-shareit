@@ -57,4 +57,5 @@ public class CommentServiceImpl implements CommentService {
 
         // Сохраняем комментарий отдельно
         return commentMapper.toResponse(commentRepository.save(comment));
-    }}
+    }
+}
