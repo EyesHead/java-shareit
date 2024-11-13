@@ -10,7 +10,7 @@ import ru.practicum.shareit.item.entity.Item;
 
 import java.util.Collection;
 
-@Mapper(componentModel = "spring", uses = {CommentMapper.class, BookingMapper.class})  // Используем мапперы для комментариев и бронирований
+@Mapper(componentModel = "spring", uses = {CommentMapper.class, BookingMapper.class})
 public interface ItemMapper {
 
     Item toItemFromPostDto(ItemPostDto itemPostDto);

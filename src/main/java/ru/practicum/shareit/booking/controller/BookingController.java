@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingPostDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.config.ControllerValues;
+import ru.practicum.shareit.config.Constants;
 
 import java.util.Collection;
 
@@ -19,7 +19,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingResponseDto createBooking(@RequestHeader(ControllerValues.USER_ID_HEADER) long ownerId,
+    public BookingResponseDto createBooking(@RequestHeader(Constants.USER_ID_HEADER) long ownerId,
                                             @RequestBody @Valid BookingPostDto bookingPostDto) {
         log.info("Received request to create booking by user ID {}", ownerId);
         BookingResponseDto response = bookingService.createBooking(bookingPostDto, ownerId);
@@ -29,7 +29,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingResponseDto approveBooking(@PathVariable(value = "bookingId") long bookingId,
-                                             @RequestHeader(ControllerValues.USER_ID_HEADER) long ownerId,
+                                             @RequestHeader(Constants.USER_ID_HEADER) long ownerId,
                                              @RequestParam("approved") boolean isApproved) {
         log.info("Received request to approve booking with ID = '{}' by owner with ID = '{}'", bookingId, ownerId);
         BookingResponseDto response = bookingService.approveBooking(bookingId, ownerId, isApproved);
@@ -38,7 +38,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public Collection<BookingResponseDto> getAllBookingsByRenterAndStatus(@RequestHeader(ControllerValues.USER_ID_HEADER) long bookerId,
+    public Collection<BookingResponseDto> getAllBookingsByRenterAndStatus(@RequestHeader(Constants.USER_ID_HEADER) long bookerId,
                                                                           @RequestParam(defaultValue = "ALL") String state) {
         log.info("Received request to retrieve all bookings for renter ID {} with state {}", bookerId, state);
         Collection<BookingResponseDto> bookings = bookingService.getAllBookingsByBookerIdAndBookingStatus(bookerId, state);
@@ -47,7 +47,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public Collection<BookingResponseDto> getBookingsByOwnerAndStatus(@RequestHeader(ControllerValues.USER_ID_HEADER) long ownerId,
+    public Collection<BookingResponseDto> getBookingsByOwnerAndStatus(@RequestHeader(Constants.USER_ID_HEADER) long ownerId,
                                                                       @RequestParam(defaultValue = "ALL") String state) {
         log.info("Received request to retrieve all bookings for owner ID {} with state {}", ownerId, state);
         Collection<BookingResponseDto> bookings = bookingService.getByOwnerIdAndBookingStatus(ownerId, state);
@@ -58,7 +58,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public BookingResponseDto getBookingById(@PathVariable long bookingId,
-                                             @RequestHeader(ControllerValues.USER_ID_HEADER) long userId) {
+                                             @RequestHeader(Constants.USER_ID_HEADER) long userId) {
         log.info("Received request to retrieve booking with ID {} by user ID {}", bookingId, userId);
         BookingResponseDto response = bookingService.getBookingByIdAndAuthorizedUserId(bookingId, userId);
         log.info("Retrieved booking with ID {} for user ID {}", bookingId, userId);
