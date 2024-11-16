@@ -53,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new UserNotFoundException(bookerId));
 
         if (!item.getAvailable()) {
-            throw new UnavailableItemBookingException(itemId);
+            throw new UnavailableItemForBookingException(itemId);
         }
 
         Booking bookingToSave = bookingMapper.toBooking(bookingPostDto);
@@ -71,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
         log.debug("Attempting to approve booking with ID {} by owner ID {}", bookingId, ownerId);
         // Поиск бронирования
         Booking foundBooking = bookingRepository.findByIdAndItemOwnerId(bookingId, ownerId)
-                .orElseThrow(() -> new UnauthorizedBookingApprovalException(bookingId, ownerId));
+                .orElseThrow(() -> new UnauthorizedUserApproveBookingException(bookingId, ownerId));
 
         // Проверка текущего статуса бронирования
         BookingStatus oldStatus = foundBooking.getStatus();
@@ -148,16 +148,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponseDto getBookingByIdAndAuthorizedUserId(long bookingId, long userId) {
+    public BookingResponseDto getBookingByIdAndUserId(long bookingId, long userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException(bookingId));
-
-        // Проверка прав доступа
-        long ownerId = booking.getItem().getOwner().getId();
-        long bookerId = booking.getBooker().getId();
-        if (userId != ownerId && userId != bookerId) {
-            throw new UnauthorizedAccessException();
-        }
 
         // Если проверка пройдена, возвращаем данные о бронировании
         log.debug("Successfully retrieved booking by booking ID {} AND user ID {}", bookingId, userId);

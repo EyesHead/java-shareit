@@ -13,7 +13,6 @@ import ru.practicum.shareit.comment.entity.Comment;
 import ru.practicum.shareit.comment.mapper.CommentMapper;
 import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.error.ItemNotFoundException;
-import ru.practicum.shareit.error.ItemOwnerNotFoundException;
 import ru.practicum.shareit.error.UserNotFoundException;
 import ru.practicum.shareit.item.dto.ItemPatchDto;
 import ru.practicum.shareit.item.dto.ItemPostDto;
@@ -65,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         Item itemToUpdate = itemRepository.findByIdAndOwnerId(itemId, ownerId)
-                .orElseThrow(() -> new ItemOwnerNotFoundException(itemId, ownerId));
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
         Item itemUpdateData = itemMapper.toItemFromPatchDto(itemPatchDto);
 
         itemToUpdate = updateItemData(itemToUpdate, itemUpdateData);

@@ -60,7 +60,7 @@ public class BookingController {
     public BookingResponseDto getBookingById(@PathVariable long bookingId,
                                              @RequestHeader(Constants.USER_ID_HEADER) long userId) {
         log.info("Received request to retrieve booking with ID {} by user ID {}", bookingId, userId);
-        BookingResponseDto response = bookingService.getBookingByIdAndAuthorizedUserId(bookingId, userId);
+        BookingResponseDto response = bookingService.getBookingByIdAndUserId(bookingId, userId);
         log.info("Retrieved booking with ID {} for user ID {}", bookingId, userId);
         return response;
     }

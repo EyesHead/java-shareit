@@ -1,6 +1,5 @@
 package ru.practicum.shareit.error;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,27 +25,37 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
-    @ExceptionHandler({UnavailableItemBookingException.class, InvalidBookingDateException.class, InvalidBookingStatusException.class})
+    @ExceptionHandler({
+            UnavailableItemForBookingException.class,
+            InvalidBookingDateException.class,
+            InvalidBookingStatusException.class
+    })
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> invalidDataRequestException(RuntimeException ex) {
         return getMappedExceptionResponseMessage(ex);
     }
 
-    @ExceptionHandler({EntityNotFoundException.class, UnsupportedOperationException.class})
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            BookingNotFoundException.class,
+            ItemNotFoundException.class,
+            UnsupportedOperationException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFoundException(RuntimeException ex) {
         return getMappedExceptionResponseMessage(ex);
     }
 
-    @ExceptionHandler({EmailAlreadyExistsException.class, BookingAlreadyExistException.class})
+    @ExceptionHandler(EmailAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleEmailDuplicateException(RuntimeException ex) {
         return getMappedExceptionResponseMessage(ex);
     }
 
-    @ExceptionHandler(UnauthorizedBookingApprovalException.class)
+    @ExceptionHandler(UnauthorizedUserApproveBookingException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public Map<String, String> handleUnauthorizedBookingApprovalException(UnauthorizedBookingApprovalException ex) {
+    public Map<String, String> handleUnauthorizedBookingApprovalException(UnauthorizedUserApproveBookingException ex) {
         return getMappedExceptionResponseMessage(ex);
     }
 
