@@ -114,7 +114,7 @@ public class ItemServiceImpl implements ItemService {
             throw new UserNotFoundException(userId);
         }
 
-        List<Item> items = (List<Item>) itemRepository.findAllByOwnerIdWithCommentsAndBookings(userId);
+        List<Item> items = (List<Item>) itemRepository.findAllByOwnerIdWithComments(userId);
 
         List<ItemDetailedResponseDto> detailedItems = items.stream()
                 .map(this::mapToDetailedResponseDto)

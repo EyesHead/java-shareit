@@ -26,7 +26,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
         LEFT JOIN FETCH it.comments c
         WHERE it.owner.id = :ownerId
     """)
-    Collection<Item> findAllByOwnerIdWithCommentsAndBookings(@Param("ownerId") long ownerId);
+    Collection<Item> findAllByOwnerIdWithComments(@Param("ownerId") long ownerId);
 
     @Query("""
         SELECT DISTINCT it
