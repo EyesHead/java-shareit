@@ -16,10 +16,7 @@ import ru.practicum.shareit.booking.entity.Booking;
 import ru.practicum.shareit.booking.entity.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.error.BookingNotFoundException;
-import ru.practicum.shareit.error.InvalidBookingStatusForApprovingException;
-import ru.practicum.shareit.error.UnavailableItemForBookingException;
-import ru.practicum.shareit.error.UserNotFoundException;
+import ru.practicum.shareit.error.*;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -32,8 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookingServiceTest {
@@ -158,6 +154,20 @@ class BookingServiceTest {
     }
 
     @Test
+    void approveBooking_shouldThrowUnauthorizedUserApproveBookingException_whenUserIsNotOwner() {
+        // Arrange
+        Mockito.when(bookingRepository.findByIdAndItemOwnerId(booking.getId(), user.getId()))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        Assertions.assertThrows(UnauthorizedUserApproveBookingException.class,
+                () -> bookingService.approveBooking(booking.getId(), user.getId(), true));
+
+        Mockito.verify(bookingRepository, Mockito.never()).save(any(Booking.class));
+    }
+
+
+    @Test
     void approveBooking_shouldThrowInvalidBookingStatusForApprovingException_whenStatusIsNotWaiting() {
         // Arrange
         booking.setStatus(BookingStatus.APPROVED);
@@ -248,6 +258,18 @@ class BookingServiceTest {
     }
 
     @Test
+    void getAllByOwnerIdAndFindStatus_shouldThrowsUnauthorizedUserGetBookingsException_whenRequesterIsNotOwner() {
+        Mockito.when(userRepository.existsById(eq(user.getId()))).thenReturn(true);
+        Mockito.when(bookingRepository.findByItemOwnerId(eq(user.getId()))).thenReturn(List.of());
+
+        Assertions.assertThrows(UnauthorizedUserGetBookingsException.class,
+                () -> bookingService.getAllByOwnerIdAndFindStatus(user.getId(), BookingFindStatus.CURRENT));
+
+        Mockito.verify(bookingRepository, Mockito.never())
+                .findCurrentByBookerId(anyLong(), any(LocalDateTime.class), any(Sort.class));
+    }
+
+    @Test
     void getAllByOwnerIdAndFindStatus_shouldReturnBookings_whenFindStatusIsWaiting() {
         // Arrange
         Mockito.when(userRepository.existsById(user.getId())).thenReturn(true);
@@ -275,7 +297,6 @@ class BookingServiceTest {
     @Test
     void getAllByRenterIdAndFindStatus_shouldReturnBookings_whenStatusIsFuture() {
         // Arrange
-        Mockito.when(bookingRepository.findByBookerId(user.getId())).thenReturn(List.of(booking));
         Mockito.when(userRepository.existsById(user.getId())).thenReturn(true);
         Mockito.when(bookingMapper.toResponseList(List.of(booking)))
                 .thenReturn(List.of(bookingResponseDto));
@@ -284,6 +305,7 @@ class BookingServiceTest {
                         any(LocalDateTime.class),
                         eq(Sort.by("start").descending())))
                 .thenReturn(List.of(booking));
+        Mockito.when(bookingRepository.findByBookerId(eq(user.getId()))).thenReturn(List.of(booking));
 
 
         // Act
@@ -421,6 +443,17 @@ class BookingServiceTest {
         Assertions.assertEquals(1, result.size());
         Mockito.verify(bookingRepository, Mockito.times(1))
                 .findByBookerId(eq(user.getId()), eq(Sort.by("start").descending()));
+    }
+
+    @Test
+    void getAllByRenterIdAndFindStatus_shouldThrowUnauthorizedUserGetBookingsException_whenUserIsUnauthorized() {
+        Mockito.when(bookingRepository.findByBookerId(Mockito.eq(user.getId()))).thenReturn(List.of());
+        Mockito.when(userRepository.existsById(Mockito.eq(user.getId()))).thenReturn(true);
+
+        Assertions.assertThrows(UnauthorizedUserGetBookingsException.class,
+                () -> bookingService.getAllByRenterIdAndFindStatus(user.getId(), BookingFindStatus.CURRENT));
+
+        Mockito.verify(bookingRepository, Mockito.never()).findCurrentByBookerId(anyLong(), any(LocalDateTime.class), any(Sort.class));
     }
 }
 
