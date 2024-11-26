@@ -68,9 +68,9 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new UnauthorizedUserApproveBookingException(bookingId, ownerId));
 
         // Проверка текущего статуса бронирования
-        BookingStatus oldStatus = foundBooking.getStatus();
-        if (oldStatus != BookingStatus.WAITING) {
-            throw new InvalidBookingStatusForApprovingException(oldStatus);
+        BookingStatus currentBookingStatus = foundBooking.getStatus();
+        if (currentBookingStatus != BookingStatus.WAITING) {
+            throw new InvalidBookingStatusForApprovingException(currentBookingStatus);
         }
 
         // Обновление статуса в зависимости от ответа владельца

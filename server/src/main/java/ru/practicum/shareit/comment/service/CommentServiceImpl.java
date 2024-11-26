@@ -6,8 +6,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.entity.BookingStatus;
 import ru.practicum.shareit.booking.entity.Booking;
+import ru.practicum.shareit.booking.entity.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.comment.dto.CommentPostDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentResponseDto createComment(CommentPostDto commentPostDto, long authorId, long itemId) {
-        final LocalDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Moscow"))
+        LocalDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Moscow"))
                 .toLocalDateTime();
 
         log.debug("[SERVER | SERVICE] Start creating comment for itemId: {}, authorId: {}", itemId, authorId);
@@ -66,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
         log.trace("[SERVER | SERVICE] Validate request on correct booking data for comment.\n" +
                 "Expect: '{}' should be APPROVED and endOfBooking='{}' should be BEFORE then comment created at='{}'",
                 bookingStatus, endOfBooking, now);
-        if (!bookingStatus.equals(BookingStatus.APPROVED) || !endOfBooking.isBefore(now)) {
+        if (!bookingStatus.equals(BookingStatus.APPROVED) || endOfBooking.isAfter(now)) {
             throw new UnauthorizedCommentCreateException("Booking is either not approved or not yet completed.");
         }
 
