@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.comment.entity.Comment;
-import ru.practicum.shareit.comment.mapper.CommentMapper;
 import ru.practicum.shareit.error.ItemNotFoundException;
 import ru.practicum.shareit.error.UserNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDetailedResponseDto;
