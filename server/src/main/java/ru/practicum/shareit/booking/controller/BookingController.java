@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.booking.dto.BookingStatus;
+import ru.practicum.shareit.booking.dto.BookingFindStatus;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.util.Constants;
 
@@ -44,7 +44,7 @@ public class BookingController {
             @RequestParam(defaultValue = "ALL") String status) {
 
         log.info("[SERVER | CONTROLLER] Request to get bookings by renterId='{}' and bookingStatus='{}'", renterId, status);
-        return bookingService.getAllByRenterIdAndStatus(renterId, BookingStatus.valueOf(status));
+        return bookingService.getAllByRenterIdAndFindStatus(renterId, BookingFindStatus.valueOf(status));
     }
 
     @GetMapping("/owner")
@@ -53,7 +53,7 @@ public class BookingController {
             @RequestParam(defaultValue = "ALL") String status) {
 
         log.info("[SERVER | CONTROLLER] Request to get bookings by ownerId='{}' and bookingStatus='{}'", ownerId, status);
-        return bookingService.getAllByItemOwnerIdAndStatus(ownerId, BookingStatus.valueOf(status));
+        return bookingService.getAllByOwnerIdAndFindStatus(ownerId, BookingFindStatus.valueOf(status));
     }
 
     @GetMapping("/{bookingId}")

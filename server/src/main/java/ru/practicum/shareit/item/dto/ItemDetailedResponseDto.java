@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 
-import java.util.Collection;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class ItemDetailedResponseDto {
     String name;
     String description;
     Boolean available;
-    Collection<CommentResponseDto> comments;
+    List<CommentResponseDto> comments;
     BookingResponseDto lastBooking;
     BookingResponseDto nextBooking;
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
-import ru.practicum.shareit.booking.dto.BookingStatus;
+import ru.practicum.shareit.booking.dto.BookingStatusParameter;
 import ru.practicum.shareit.error.InvalidBookingDateException;
 import ru.practicum.shareit.error.InvalidBookingStatusException;
 import ru.practicum.shareit.util.Constants;
@@ -29,10 +29,10 @@ public class BookingController {
     @GetMapping
     public ResponseEntity<Object> getBookingsByRenter(@RequestHeader(Constants.USER_ID_HEADER) long renterId,
                                                       @RequestParam(name = "state", defaultValue = "all") String statusRequest) {
-        BookingStatus bookingStatus = BookingStatus.get(statusRequest)
+        BookingStatusParameter bookingStatusParameter = BookingStatusParameter.get(statusRequest)
                 .orElseThrow(() -> new InvalidBookingStatusException("Unknown bookingStatus: " + statusRequest));
-        log.info("[GATEWAY] Get bookings with bookingStatus='{}' and renter with id='{}'", bookingStatus, renterId);
-        return bookingClient.getBookingsByRenterId(renterId, bookingStatus);
+        log.info("[GATEWAY] Get bookings with bookingStatus='{}' and renter with id='{}'", bookingStatusParameter, renterId);
+        return bookingClient.getBookingsByRenterId(renterId, bookingStatusParameter);
     }
 
     @GetMapping("/owner")
@@ -40,11 +40,11 @@ public class BookingController {
             @RequestHeader(Constants.USER_ID_HEADER) long ownerId,
             @RequestParam(defaultValue = "ALL") String statusRequest) {
 
-        BookingStatus bookingStatus = BookingStatus.get(statusRequest)
+        BookingStatusParameter bookingStatusParameter = BookingStatusParameter.get(statusRequest)
                 .orElseThrow(() -> new InvalidBookingStatusException("Unknown bookingStatus: " + statusRequest));
 
-        log.info("[GATEWAY] Get bookings with bookingStatus='{}' and item owner with id='{}'", bookingStatus, ownerId);
-        return bookingClient.getBookingsByOwnerId(ownerId, bookingStatus);
+        log.info("[GATEWAY] Get bookings with bookingStatus='{}' and item owner with id='{}'", bookingStatusParameter, ownerId);
+        return bookingClient.getBookingsByOwnerId(ownerId, bookingStatusParameter);
     }
 
     @GetMapping("/{bookingId}")

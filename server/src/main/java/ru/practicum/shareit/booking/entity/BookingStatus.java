@@ -1,14 +1,6 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking.entity;
 
 public enum BookingStatus {
-    // Все
-    ALL,
-    // Текущие
-    CURRENT,
-    // Будущие
-    FUTURE,
-    // Завершенные
-    PAST,
     // Отклоненные
     REJECTED,
     // Ожидающие подтверждения

@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.error.ItemRequestNotFoundException;
 import ru.practicum.shareit.error.UserNotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestPostDto;
-import ru.practicum.shareit.request.dto.ItemRequestWithItemsResponseDto;
+import ru.practicum.shareit.request.dto.ItemRequestSimpleDto;
+import ru.practicum.shareit.request.dto.ItemRequestWithResponsesDto;
 import ru.practicum.shareit.request.entity.ItemRequest;
 import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
@@ -28,7 +29,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     UserRepository userRepository;
 
     @Override
-    public ItemRequestWithItemsResponseDto createRequest(ItemRequestPostDto itemRequestPostDto, long userId) {
+    public ItemRequestSimpleDto createRequest(ItemRequestPostDto itemRequestPostDto, long userId) {
         log.debug("[SERVER | SERVICE] createRequest called with userId: {}", userId);
 
         User requester = userRepository.findById(userId)
@@ -42,11 +43,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         log.debug("[SERVER | SERVICE] Created ItemRequest with id: {}. Request before mapping: {}",
                 saved.getId(), saved);
 
-        return mapper.toResponse(saved);
+        return mapper.toSimpleResponse(saved);
     }
 
     @Override
-    public Collection<ItemRequestWithItemsResponseDto> getUserRequests(long userId) {
+    public Collection<ItemRequestWithResponsesDto> getUserRequests(long userId) {
         log.debug("[SERVER | SERVICE] getUserRequests called with userId: {}", userId);
 
         if (!userRepository.existsById(userId)) {
@@ -57,11 +58,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         log.debug("[SERVER | SERVICE] Found {} requests for userId: {}", requests.size(), userId);
         log.debug("[SERVER | SERVICE] Requests for user before mapping: {}", requests);
 
-        return mapper.toResponseList(requests);
+        return mapper.toDetailedResponseList(requests);
     }
 
     @Override
-    public ItemRequestWithItemsResponseDto getByIdAndRequesterId(long requestId, long userId) {
+    public ItemRequestWithResponsesDto getByIdAndRequesterId(long requestId, long userId) {
         log.debug("[SERVER | SERVICE] getByIdAndRequesterId called with requestId: {}, userId: {}", requestId, userId);
 
         ItemRequest request = itemRequestRepository.findByIdWithItems(requestId)
@@ -69,21 +70,16 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         log.debug("[SERVER | SERVICE] Returning ItemRequest with id: {}", request.getId());
         log.debug("[SERVER | SERVICE] Retrieved request before mapping: {}", request);
-        return mapper.toResponse(request);
+        return mapper.toDetailedResponse(request);
     }
 
     @Override
-    public Collection<ItemRequestWithItemsResponseDto> getAllOtherRequests(long userId) {
-        log.debug("[SERVER | SERVICE] getAllOtherRequests called with userId: {}", userId);
+    public Collection<ItemRequestSimpleDto> getAllRequests() {
+        log.debug("[SERVER | SERVICE] getAllOtherRequests called");
 
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(userId);
-        }
+        Collection<ItemRequest> requests = itemRequestRepository.findAllByOrderByCreatedDesc();
+        log.debug("[SERVER | SERVICE] Found {} requests created", requests.size());
 
-        Collection<ItemRequest> requests = itemRequestRepository.findAllByOtherUsers(userId);
-        log.debug("[SERVER | SERVICE] Found {} requests created by other users instead of: userId='{}'", requests.size(), userId);
-        log.debug("[SERVER | SERVICE] Requests created by other users: {}", requests);
-
-        return mapper.toResponseList(requests);
+        return mapper.toSimpleResponseList(requests);
     }
 }

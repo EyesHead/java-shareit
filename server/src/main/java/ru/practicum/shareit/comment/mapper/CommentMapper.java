@@ -7,6 +7,7 @@ import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.comment.entity.Comment;
 
 import java.util.Collection;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
@@ -15,5 +16,5 @@ public interface CommentMapper {
     @Mapping(target = "authorName", source = "author.name")
     CommentResponseDto toResponse(Comment comment);
 
-    Collection<CommentResponseDto> toResponseList(Collection<Comment> comments);
+    List<CommentResponseDto> toResponseList(Collection<Comment> comments);
 }

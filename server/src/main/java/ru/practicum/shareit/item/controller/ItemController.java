@@ -26,7 +26,7 @@ public class ItemController {
         Long requestId = itemCreateDto.getRequestId();
         if (requestId != null) {
             log.info("Received request to create item from user on request. userId='{}', requestId='{}'", userId, requestId);
-            return itemService.createItemByRequest(userId, requestId, itemCreateDto);
+            return itemService.createItemOnRequest(userId, requestId, itemCreateDto);
         }
         log.info("Received request to create item from user. userId='{}'", userId);
         return itemService.createItemByUser(userId, itemCreateDto);
@@ -38,7 +38,7 @@ public class ItemController {
                                            @RequestBody ItemPatchDto itemUpdateData) {
         log.info("Received request to update item for owner. ItemId = {}, ownerId = {}", itemId, ownerId);
 
-        return itemService.updateUserItem(ownerId, itemId, itemUpdateData);
+        return itemService.updateItemByIdAndOwnerId(ownerId, itemId, itemUpdateData);
     }
 
     @GetMapping

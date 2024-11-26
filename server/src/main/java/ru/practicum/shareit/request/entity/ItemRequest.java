@@ -1,15 +1,13 @@
 package ru.practicum.shareit.request.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.user.entity.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +15,8 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "requests")
 public class ItemRequest {
@@ -38,6 +38,19 @@ public class ItemRequest {
     @OneToMany(mappedBy = "request", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Item> items;
+
+    public void addItem(Item item) {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+        items.add(item);
+        item.setRequest(this); // Устанавливаем связь на стороне Item
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+        item.setRequest(null); // Убираем связь
+    }
 
     @Override
     public final boolean equals(Object o) {

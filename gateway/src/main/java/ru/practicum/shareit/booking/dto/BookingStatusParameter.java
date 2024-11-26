@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.dto;
 
 import java.util.Optional;
 
-public enum BookingStatus {
+public enum BookingStatusParameter {
     // Все
     ALL,
     // Текущие
@@ -16,8 +16,8 @@ public enum BookingStatus {
     // Ожидающие подтверждения
     WAITING;
 
-    public static Optional<BookingStatus> get(String stringState) {
-        for (BookingStatus state : values()) {
+    public static Optional<BookingStatusParameter> get(String stringState) {
+        for (BookingStatusParameter state : values()) {
             if (state.name().equalsIgnoreCase(stringState)) {
                 return Optional.of(state);
             }

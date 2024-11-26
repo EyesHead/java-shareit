@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.booking.dto.BookingStatus;
+import ru.practicum.shareit.booking.dto.BookingFindStatus;
+import ru.practicum.shareit.booking.entity.BookingStatus;
 import ru.practicum.shareit.booking.entity.Booking;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -82,7 +83,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public Collection<BookingResponseDto> getAllByRenterIdAndStatus(long bookerId, BookingStatus status) {
+    public Collection<BookingResponseDto> getAllByRenterIdAndFindStatus(long bookerId, BookingFindStatus status) {
         log.debug("Getting bookings by bookerId='{}' with status='{}'", bookerId, status);
 
         if (!userRepository.existsById(bookerId)) {
@@ -114,7 +115,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public Collection<BookingResponseDto> getAllByItemOwnerIdAndStatus(long ownerId, BookingStatus status) {
+    public Collection<BookingResponseDto> getAllByOwnerIdAndFindStatus(long ownerId, BookingFindStatus status) {
         log.debug("Fetching bookings for item owner ID {} with status {}", ownerId, status);
 
         if (!userRepository.existsById(ownerId)) {
@@ -136,7 +137,7 @@ public class BookingServiceImpl implements BookingService {
                     ownerId, BookingStatus.WAITING, Sort.by("start").descending());
             case REJECTED -> bookingRepository.findByItemOwnerIdAndStatus(
                     ownerId, BookingStatus.REJECTED, Sort.by("start").descending());
-            default -> bookingRepository.findAllByItemOwnerId(ownerId, Sort.by("start").descending());
+            case ALL -> bookingRepository.findAllByItemOwnerId(ownerId, Sort.by("start").descending());
         };
         log.debug("Retrieved {} bookings for item owner ID {}", bookings.size(), ownerId);
         return bookingMapper.toResponseList(bookings);

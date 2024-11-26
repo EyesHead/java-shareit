@@ -8,7 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
-import ru.practicum.shareit.booking.dto.BookingStatus;
+import ru.practicum.shareit.booking.dto.BookingStatusParameter;
 import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
@@ -26,16 +26,16 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getBookingsByRenterId(long renterId, BookingStatus bookingStatus) {
+    public ResponseEntity<Object> getBookingsByRenterId(long renterId, BookingStatusParameter bookingStatusParameter) {
         Map<String, Object> parameters = Map.of(
-                "state", bookingStatus.name()
+                "state", bookingStatusParameter.name()
         );
         return get("?state={state}", renterId, parameters);
     }
 
-    public ResponseEntity<Object> getBookingsByOwnerId(long ownerId, BookingStatus bookingStatus) {
+    public ResponseEntity<Object> getBookingsByOwnerId(long ownerId, BookingStatusParameter bookingStatusParameter) {
         Map<String, Object> parameters = Map.of(
-                "state", bookingStatus.name()
+                "state", bookingStatusParameter.name()
         );
         return get("/owner?state={state}", ownerId, parameters);
     }

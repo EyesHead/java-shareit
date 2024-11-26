@@ -10,7 +10,7 @@ import java.util.Collection;
 public interface ItemService {
     ItemResponseDto createItemByUser(long userId, ItemPostDto itemRequest);
 
-    ItemResponseDto updateUserItem(long userId, long itemId, ItemPatchDto itemUpdateData);
+    ItemResponseDto updateItemByIdAndOwnerId(long userId, long itemId, ItemPatchDto itemUpdateData);
 
     Collection<ItemDetailedResponseDto> getOwnerItemsWithComments(long userId);
 
@@ -18,5 +18,5 @@ public interface ItemService {
 
     Collection<ItemResponseDto> searchUserItemsBySearchText(long userId, String searchText);
 
-    ItemResponseDto createItemByRequest(long userId, long requestId, ItemPostDto itemCreateDto);
+    ItemResponseDto createItemOnRequest(long userId, long requestId, ItemPostDto itemCreateDto);
 }

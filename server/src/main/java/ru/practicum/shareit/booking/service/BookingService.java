@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.booking.dto.BookingStatus;
+import ru.practicum.shareit.booking.dto.BookingFindStatus;
 
 import java.util.Collection;
 
@@ -11,9 +11,9 @@ public interface BookingService {
 
     BookingResponseDto approveBooking(long bookingId, long ownerId, boolean isApproved);
 
-    Collection<BookingResponseDto> getAllByRenterIdAndStatus(long bookerId, BookingStatus status);
+    Collection<BookingResponseDto> getAllByRenterIdAndFindStatus(long bookerId, BookingFindStatus status);
 
-    Collection<BookingResponseDto> getAllByItemOwnerIdAndStatus(long bookerId, BookingStatus status);
+    Collection<BookingResponseDto> getAllByOwnerIdAndFindStatus(long bookerId, BookingFindStatus status);
 
     BookingResponseDto getBookingByIdAndUserId(long bookingId, long userId);
 }

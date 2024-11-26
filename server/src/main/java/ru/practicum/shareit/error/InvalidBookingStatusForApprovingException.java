@@ -1,6 +1,6 @@
 package ru.practicum.shareit.error;
 
-import ru.practicum.shareit.booking.dto.BookingStatus;
+import ru.practicum.shareit.booking.entity.BookingStatus;
 
 public class InvalidBookingStatusForApprovingException extends RuntimeException {
     public InvalidBookingStatusForApprovingException(BookingStatus bookingStatus) {
