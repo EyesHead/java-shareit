@@ -24,8 +24,6 @@ import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 @Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -41,8 +39,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentResponseDto createComment(CommentPostDto commentPostDto, long authorId, long itemId) {
-        LocalDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Moscow"))
-                .toLocalDateTime();
+        LocalDateTime now = LocalDateTime.now();
 
         log.debug("[SERVER | SERVICE] Start creating comment for itemId: {}, authorId: {}", itemId, authorId);
         // Проверяем автора
