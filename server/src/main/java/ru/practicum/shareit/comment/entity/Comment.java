@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -34,6 +33,5 @@ public class Comment {
     private String text;
 
     @Column(name = "created_at", nullable = false)
-    @Builder.Default
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 }

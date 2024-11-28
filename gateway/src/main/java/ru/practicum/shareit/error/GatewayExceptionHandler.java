@@ -18,7 +18,7 @@ public class GatewayExceptionHandler {
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put("error", error.getField() + "violation :" + error.getDefaultMessage())
+                errors.put("error", error.getField() + " violation :" + error.getDefaultMessage())
         );
         log.warn("Constraint violation:\n{}", errors.values());
         return errors;
